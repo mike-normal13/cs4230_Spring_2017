@@ -156,9 +156,10 @@ int main (int argc, char* argv[]){
 
     for(int i = 1; i<M; i++)
     {
-      //  we need to distribute this "j",
-      //    whatever that means....
-    	for(int j = 0; j<i; j++) // we can parallelize this loop, and it is simple....
+      int j = 0;
+
+      //  we need to distribute this "j", whatever that means....
+    	for(/*int*/ j = 0; j<i; j++) // we can parallelize this loop, and it is simple....
     	{
     		alpha = 0.0;
     		beta = 0.0;
@@ -166,22 +167,20 @@ int main (int argc, char* argv[]){
 
         int k = 0;
 
-#ifdef _OPENMP
-        #pragma omp parallel for private(k) reduction(+: alpha, beta, gamma)
-#endif
-    		for(/*int*/k = 0; k < N; k++)
-    		{
-    			alpha = alpha + (U_t[i][k] * U_t[i][k]);
-    			beta = beta + (U_t[j][k] * U_t[j][k]);
-    			gamma = gamma + (U_t[i][k] * U_t[j][k]);
-    		}
+        #pragma omp parallel /*for*/ private(k) reduction(+: alpha, beta, gamma)
+        {
+    		    for(/*int*/k = 0; k < N; k++)
+    		    {
+    			   alpha = alpha + (U_t[i][k] * U_t[i][k]);
+    			   beta = beta + (U_t[j][k] * U_t[j][k]);
+    			   gamma = gamma + (U_t[i][k] * U_t[j][k]);
+    		    } 
+        }
             // need to look at moving this line out of the j loop somehow....
             // there is loop carried dependence on "converge" here,
-            //    we could use a max reduction here
-        //            reduction(max: converge)
+            //    we could use a max reduction here: reduction(max: converge)
           converge = max(converge, abs(gamma)/sqrt(alpha*beta));	//compute convergence
-	  								//basicaly is the angle, between column i and j
-
+	  								                                         //basicaly is the angle, between column i and j
             // these four lines
         	zeta = (beta - alpha) / (2.0 * gamma);
         	t = sgn(zeta) / (abs(zeta) + sqrt(1.0 + (zeta*zeta)));        //compute tan of angle
@@ -189,64 +188,60 @@ int main (int argc, char* argv[]){
             //    then parallelize the j loop and we should see a bump in performace,
             //        if we do this we should not have to do the reductionm on "alpha", "beta", and "gamma"
         	c = 1.0 / (sqrt (1.0 + (t*t)));				//extract cos
-        	s = c*t;							//extrac sin
+        	s = c*t;							                //extrac sin
             // if the j loop ended here, could we parallelize this loop
             //  zeta, t, c, and s would need to be private
 
+        #pragma omp parallel private(k,t) 
+        {
           //  "the U_t[i][k] will be one time step behind..."
-	  		//Apply rotations on U and V
-#ifdef _OPENMP
-        #pragma omp parallel for private(k) shared(t, U_t, V_t)
-#endif
-        for(/*int*/ k=0; k<N; k++)
-      	{
+	  		 //Apply rotations on U and V
+          #pragma omp for
+          for(/*int*/ k=0; k<N; k++)
+      	   {
           		t = U_t[i][k];
           		U_t[i][k] = c*t - s*U_t[j][k]; // U_t[i][k] depends on j here, if j is less than i 
               ///                                 it remains teh same per iteration
-          		U_t[j][k] = s*t + c*U_t[j][k]; // there is a dependence on j here... the dependence distance is [0,0] here
+              U_t[j][k] = s*t + c*U_t[j][k]; // there is a dependence on j here... the dependence distance is [0,0] here
+          }
 
-          		t = V_t[i][k];
-          		V_t[i][k] = c*t - s*V_t[j][k];
-          		V_t[j][k] = s*t + c*V_t[j][k];
+          #pragma omp for
+          for(/*int*/ k=0; k<N; k++)
+          {
+              t = V_t[i][k];
+              V_t[i][k] = c*t - s*V_t[j][k];
+              V_t[j][k] = s*t + c*V_t[j][k];
+          }
         }
       }
     }
 
-
-      //int i = 0;
-      //int j = 0;
   //Create matrix S
-//#ifdef _OPENMP
-//      #pragma omp parallel for private(i, j)
-//#endif
-      	for(int i = 0; i < M; i++)
+    for(int i = 0; i < M; i++)
+    {
+   		t=0;
+      int j = 0;
+
+      #pragma omp parallel for reduction(+:t)
+      for(j = 0; j < N; j++)
+      {
+      	t = t + pow(U_t[i][j],2);
+      }
+
+      t = sqrt(t);
+
+      #pragma omp parallel for firstprivate(i, U_t, S) private(j)
+      for(/*int*/ j=0; j<N;j++)
+      {
+      	U_t[i][j] = U_t[i][j] / t;
+      	if(i == j)
       	{
-
-      		t=0;
-
-          int j = 0;
-
-#ifdef _OPENMP
-          #pragma omp parallel for private(j) reduction(+:t)
-#endif
-      		for(j = 0; j < N; j++)
-      		{
-      			t = t + pow(U_t[i][j],2);
-      		}
-
-      		t = sqrt(t);
-
-      		for(int j=0; j<N;j++)
-      		{
-      			U_t[i][j] = U_t[i][j] / t;
-      			if(i == j)
-      			{
-      				S[i] = t;
-      			}
-      		}
+      		S[i] = t;
       	}
+      }
+    }
 
-      gettimeofday(&end, NULL);
+    gettimeofday(&end, NULL);
   //********************************************************************************************************************
 
  /* Develop SVD Using OpenMP */
