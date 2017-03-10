@@ -167,15 +167,20 @@ int main (int argc, char* argv[]){
 
         int k = 0;
 
-        #pragma omp parallel /*for*/ private(k) reduction(+: alpha, beta, gamma)
-        {
-    		    for(/*int*/k = 0; k < N; k++)
-    		    {
-    			   alpha = alpha + (U_t[i][k] * U_t[i][k]);
-    			   beta = beta + (U_t[j][k] * U_t[j][k]);
-    			   gamma = gamma + (U_t[i][k] * U_t[j][k]);
-    		    } 
-        }
+        // leaving this loop alone seemed to be the best thing,
+        //  using a parallel for gave incorrect results,
+        //    and use reductions slowed things down by about 100 ms on average
+        //  we also tried giving each assignment its own section,
+        //    which did not seem to affect run time
+    		for(/*int*/k = 0; k < N; k++)
+    		{
+          double utik = U_t[i][k];
+          double utjk = U_t[j][k];
+
+             alpha = alpha + (utik * utik);  // bringing this out gave incorrect results
+             beta = beta + (utjk* utjk);
+             gamma = gamma + (utik * utjk);          
+    		}        
             // need to look at moving this line out of the j loop somehow....
             // there is loop carried dependence on "converge" here,
             //    we could use a max reduction here: reduction(max: converge)
@@ -192,37 +197,66 @@ int main (int argc, char* argv[]){
             // if the j loop ended here, could we parallelize this loop
             //  zeta, t, c, and s would need to be private
 
-        #pragma omp parallel private(k,t) 
+        #pragma omp parallel private(k,t)
         {
+          #pragma omp sections
+          {
           //  "the U_t[i][k] will be one time step behind..."
 	  		 //Apply rotations on U and V
-          #pragma omp for
-          for(/*int*/ k=0; k<N; k++)
-      	   {
-          		t = U_t[i][k];
+          #pragma omp section
+          for(/*int*/ k=0; k<N; k +=4)
+            {
+              t = U_t[i][k];
           		U_t[i][k] = c*t - s*U_t[j][k]; // U_t[i][k] depends on j here, if j is less than i 
               ///                                 it remains teh same per iteration
               U_t[j][k] = s*t + c*U_t[j][k]; // there is a dependence on j here... the dependence distance is [0,0] here
-          }
 
-          #pragma omp for
-          for(/*int*/ k=0; k<N; k++)
-          {
+              t = U_t[i][k+1];
+              U_t[i][k+1] = c*t - s*U_t[j][k+1]; 
+              U_t[j][k+1] = s*t + c*U_t[j][k+1]; 
+
+              t = U_t[i][k+2];
+              U_t[i][k+2] = c*t - s*U_t[j][k+2]; 
+              U_t[j][k+2] = s*t + c*U_t[j][k+2]; 
+              
+              t = U_t[i][k+3];
+              U_t[i][k+3] = c*t - s*U_t[j][k+3]; 
+              U_t[j][k+3] = s*t + c*U_t[j][k+3]; 
+            }
+          
+
+          #pragma omp section
+          for(/*int*/ k=0; k<N; k += 4)
+            {
               t = V_t[i][k];
               V_t[i][k] = c*t - s*V_t[j][k];
               V_t[j][k] = s*t + c*V_t[j][k];
+
+              t = V_t[i][k+1];
+              V_t[i][k+1] = c*t - s*V_t[j][k+1];
+              V_t[j][k+1] = s*t + c*V_t[j][k+1];
+
+              t = V_t[i][k+2];
+              V_t[i][k+2] = c*t - s*V_t[j][k+2];
+              V_t[j][k+2] = s*t + c*V_t[j][k+2];
+
+              t = V_t[i][k+3];
+              V_t[i][k+3] = c*t - s*V_t[j][k+3];
+              V_t[j][k+3] = s*t + c*V_t[j][k+3];
+            }
           }
         }
       }
     }
 
+    
   //Create matrix S
     for(int i = 0; i < M; i++)
     {
    		t=0;
       int j = 0;
 
-      #pragma omp parallel for reduction(+:t)
+      #pragma omp parallel for private(j) firstprivate(i)
       for(j = 0; j < N; j++)
       {
       	t = t + pow(U_t[i][j],2);
@@ -230,14 +264,24 @@ int main (int argc, char* argv[]){
 
       t = sqrt(t);
 
-      #pragma omp parallel for firstprivate(i, U_t, S) private(j)
-      for(/*int*/ j=0; j<N;j++)
+      //#pragma omp parallel for firstprivate(i, U_t, S) private(j)
+      #pragma omp parallel sections firstprivate(i, U_t, S), private(j)
       {
-      	U_t[i][j] = U_t[i][j] / t;
-      	if(i == j)
-      	{
-      		S[i] = t;
-      	}
+        #pragma omp /*reduction(/ : U_t)*/ section 
+        for(j = 0; j < N; j++)
+        {
+          U_t[i][j] = U_t[i][j] / t;
+        }
+
+        #pragma omp section
+        for(j = 0; j < N; j++)
+        {
+      	 //U_t[i][j] = U_t[i][j] / t;
+      	 if(i == j)
+      	 {
+      	   	S[i] = t;
+      	 }
+        }
       }
     }
 
