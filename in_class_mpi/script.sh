@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 #SBATCH --account+soc-kp
 #SBATCH --partiton=soc-kp
 #SBATCH --job-name=comp_422_openmp   // <- your job name
