@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --account+soc-kp
-#SBATCH --partiton=soc-kp
+#SBATCH --account=soc-kp
+#SBATCH --partition=soc-kp
 #SBATCH --job-name=comp_422_openmp   // <- your job name
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=1
