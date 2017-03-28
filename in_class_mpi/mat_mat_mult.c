@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
 	Double myA[N/size][N];
 
-	MPI_scatter(A, (N*N)/size, MPI_Double, myA, (N*N)/size, MPI_Double, 0, MPI_COMM_WORLD)
+	MPI_scatter(A, (N*N)/size, MPI_DOUBLE, myA, (N*N)/size, MPI_DOUBLE, 0, MPI_COMM_WORLD)
 
 	for(int i = 0; i < N; i++)
 		for(int j = 0; j < N; j++)
