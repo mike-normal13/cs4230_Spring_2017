@@ -51,9 +51,9 @@ int main(int argc, char* argv[])
 	MPI_Comm_rank( MPI_COMM_WORLD, &rank );
 	MPI_Comm_size( MPI_COMM_WORLD, &size );
 
-	Double myA[N/size][N];
+	double myA[N/size][N];
 
-	MPI_scatter(A, (N*N)/size, MPI_DOUBLE, myA, (N*N)/size, MPI_DOUBLE, 0, MPI_COMM_WORLD)
+	MPI_scatter(A, (N*N)/size, MPI_DOUBLE, myA, (N*N)/size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 	for(int i = 0; i < N; i++)
 		for(int j = 0; j < N; j++)
