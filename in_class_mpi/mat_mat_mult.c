@@ -3,7 +3,7 @@
 #include <mpi.h>
 #include <stdio.h>
 
-#define N = 4
+#define N  4
 
 // scatter sends adjacent data
 // 	with scatter the send bufer is A,
