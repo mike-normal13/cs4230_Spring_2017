@@ -12,6 +12,6 @@
 
 ulimit -c unlimited -s
 
-mpicc mat_mat_mult.c -o mat_mat_mult
+mpicc mat_mat_mult.c -o mat_mat_mult -std=c99
 
 mpiexec -n 2 ./mat_mat_mult
