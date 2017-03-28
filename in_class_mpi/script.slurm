@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=10g
-#SBATCH --time= 00:10:00
+#SBATCH --time=00:10:00
 #SBATCH --export=ALL
 
 ulimit -c unlimited -s
