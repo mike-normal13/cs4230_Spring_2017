@@ -31,9 +31,9 @@ int main(int argc, char* argv[])
 	int rank;
 	int size;
 
-	Double C[N][N];
-	Double A[N][N];
-	Double B[N][N];
+	double C[N][N];
+	double A[N][N];
+	double B[N][N];
 
 	if(rank == 0)
 	{
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
 	Double myA[N/size][N];
 
-	MPI_scatter(A, (N*N)/size, MPI_Float, myA, (N*N)/size, MPI_Float, 0, MPI_COMM_WORLD)
+	MPI_scatter(A, (N*N)/size, MPI_Double, myA, (N*N)/size, MPI_Double, 0, MPI_COMM_WORLD)
 
 	for(int i = 0; i < N; i++)
 		for(int j = 0; j < N; j++)
