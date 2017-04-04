@@ -7,7 +7,7 @@
 #SBATCH --partition=soc-kp
 #SBATCH --job-name=some_mpi
 #SBATCH --mem=10g
-#SBATCH --export= ALL
+#SBATCH --export=ALL
 
 ulimit -c unlimited -s
 
