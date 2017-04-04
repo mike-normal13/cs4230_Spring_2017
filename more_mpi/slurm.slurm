@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 #SBATCH --time=0:00:20
-#SBATCH --nodes=8
-#SBATCH --ntasks=16
+#SBATCH --nodes=2
+#SBATCH --ntasks=2
 #SBATCH --account=soc-kp
 #SBATCH --partition=soc-kp
 #SBATCH --job-name=some_mpi
