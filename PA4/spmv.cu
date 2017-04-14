@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern int cudaMemcpy();
+extern int cudaFree();
+
 main (int argc, char **argv) 
 {
   FILE *fp;
