@@ -43,10 +43,10 @@ main (int argc, char **argv)
 
   //------------ cuda mallocs ------------------------
   cudaMalloc(&ptr_c, (nr+1)*sizeof(int));
-  cudatMalloc(&indices_c, n*sizeof(int));
-  cudatMalloc(&data_c, n*sizeof(float));
-  cudatMalloc(&b_c, nc*sizeof(float));
-  cudatMalloc(&t_c, nr*sizeof(float));
+  cudaMalloc(&indices_c, n*sizeof(int));
+  cudaMalloc(&data_c, n*sizeof(float));
+  cudaMalloc(&b_c, nc*sizeof(float));
+  cudaMalloc(&t_c, nr*sizeof(float));
   //------------ end of cuda mallocs -----------------
 
   // Read data in coordinate format and initialize sparse matrix
