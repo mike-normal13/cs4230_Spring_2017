@@ -400,10 +400,10 @@ void skewleft(double* mat, int dim)
 {
 	// skew elements in rows of A left by row number
 	//for(int i = 0; i < N; i++)
-		for(int i = 0; i < dim; i++)
+	for(int i = 0; i < dim; i++)
 	{
 		//for(int j = 0; j < N; j++)
-			for(int j = 0; j < dim; j++)
+		for(int j = 0; j < dim; j++)
 		{
 			//tempA[j + (N * i)] = A[(N * i) + (((i * N) + (j + i)) % N)];
 			mat[j + (dim * i)] = mat[(dim * i) + (((i * dim) + (j + i)) % dim)];	

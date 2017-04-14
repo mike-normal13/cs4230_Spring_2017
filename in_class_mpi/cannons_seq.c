@@ -88,17 +88,6 @@ int main(int argc, char* argv[])
 		}
 	}
 
-// 	int i, j, k;
-//  int sqroot = (int)sqrt(grid->nb_proc);
-
-	//int sqroot = (int)sqrt(N);
-
-//     	for (i = 0; i < sqroot; i++)
-//         	for (j = 0; j < sqroot; j++)
-//             		for (k = 0; k < sqroot; k++)
-//                 		block_C[i*sqroot+j] += block_A[i*sqroot+k]*block_B[k*sqroot+j];
-// }
-
 	// now finish the algorithm
 	//for(int k = 0; k < N; k++)
 	//{
@@ -119,12 +108,7 @@ int main(int argc, char* argv[])
 		}
 	//}
 
-	//MPI_Finalize();
-
-	for(int i = 0; i < N * N; i++)
-	{
-		printf("%f\n", C[i]);
-	}
+	for(int i = 0; i < N * N; i++){	printf("%f\n", C[i]);	}
 }
 
 // shift every row in A one element to the left
