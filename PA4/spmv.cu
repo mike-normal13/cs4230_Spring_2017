@@ -111,6 +111,7 @@ main (int argc, char **argv)
   printf("------------------------------------------------------------------------\n");
   printf("------------------------------------------------------------------------\n");
   printf("------------------------------------------------------------------------\n");
+  fflush(stdout);
 
   // TODO: Compute result on GPU and compare output
   spmv<<<1, 1>>>(nr, ptr, t, data, b, indices);
@@ -121,6 +122,7 @@ printf("segfault before?\n");
   for(int k = 0; k < nr; k++)
   {
     printf("k: %d\n", k);
+    fflush(stdout);
     assert(t[k] == t_c[k]);
   }
   printf("segfault after?\n");
