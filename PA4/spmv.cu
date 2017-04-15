@@ -51,12 +51,12 @@ main (int argc, char **argv)
   t = (float *) malloc(nr*sizeof(float));
 
   //------------ cuda mallocs ------------------------
-  cudaMalloc(&ptr_c, (nr+1)*sizeof(int));
-  cudaMalloc(&indices_c, n*sizeof(int));
-  cudaMalloc(&data_c, n*sizeof(float));
-  cudaMalloc(&b_c, nc*sizeof(float));
-  cudaMalloc(&t_c, nr*sizeof(float));
-  cudaMalloc(&res, nr*sizeof(float));
+  cudaMalloc((void**)&ptr_c, (nr+1)*sizeof(int));
+  cudaMalloc((void**)&indices_c, n*sizeof(int));
+  cudaMalloc((void**)&data_c, n*sizeof(float));
+  cudaMalloc((void**)&b_c, nc*sizeof(float));
+  cudaMalloc((void**)&t_c, nr*sizeof(float));
+  cudaMalloc((void**)&res, nr*sizeof(float));
   //------------ end of cuda mallocs -----------------
 
   // Read data in coordinate format and initialize sparse matrix
@@ -76,11 +76,7 @@ main (int argc, char **argv)
     }
   }
 
-  cudaMemcpy(indices_c, indices, n*sizeof(int), cudaMemcpyHostToDevice);
-
   ptr[nr] = n;
-
-  cudaMemcpy(ptr_c, ptr, (nr+1)*sizeof(int), cudaMemcpyHostToDevice);
 
   // initialize t to 0 and b with random data  
   for (i=0; i<nr; i++) 
@@ -88,13 +84,13 @@ main (int argc, char **argv)
     t[i] = 0.0;
   }
 
-  //cudaMemcpy(t_c, t, nr*sizeof(float), cudaMemcpyHostToDevice);
-
   for (i=0; i<nc; i++) 
   {
     b[i] = (float) rand()/1111111111;
   }
 
+  cudaMemcpy(indices_c, indices, n*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(ptr_c, ptr, (nr+1)*sizeof(int), cudaMemcpyHostToDevice);
   cudaMemcpy(b_c, b, nc*sizeof(float), cudaMemcpyHostToDevice);
 
   // MAIN COMPUTATION, SEQUENTIAL VERSION
@@ -103,16 +99,8 @@ main (int argc, char **argv)
     for (j = ptr[i]; j<ptr[i+1]; j++) 
     {
       t[i] = t[i] + data[j] * b[indices[j]];
-      //printf("%f ", t[i]);
     }
-
-    //printf("\n");
   }
-
-  printf("------------------------------------------------------------------------\n");
-  printf("------------------------------------------------------------------------\n");
-  printf("------------------------------------------------------------------------\n");
-  fflush(stdout);
 
   // TODO: Compute result on GPU and compare output
   spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
