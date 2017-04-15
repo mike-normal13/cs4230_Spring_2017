@@ -112,23 +112,19 @@ main (int argc, char **argv)
   printf("------------------------------------------------------------------------\n");
   printf("------------------------------------------------------------------------\n");
 
-
   // TODO: Compute result on GPU and compare output
   spmv<<<1, 1>>>(nr, ptr, t, data, b, indices);
-
+  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
   
-
 printf("segfault before?\n");
     fflush(stdout);
-  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
-  printf("segfault after?\n");
-    fflush(stdout);
-
   for(int k = 0; k < nr; k++)
   {
     printf("k: %d\n", k);
-    assert(t[k] == res[k]);
+    assert(t[k] == t_c[k]);
   }
+  printf("segfault after?\n");
+    fflush(stdout);
 
 }
 
