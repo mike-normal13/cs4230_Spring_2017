@@ -45,6 +45,14 @@ main (int argc, char **argv)
   b = (float *) malloc(nc*sizeof(float));
   t = (float *) malloc(nr*sizeof(float));
 
+  //------------ cuda mallocs ------------------------
+  cudaMalloc(&ptr_c, (nr+1)*sizeof(int));
+  cudaMalloc(&indices_c, n*sizeof(int));
+  cudaMalloc(&data_c, n*sizeof(float));
+  cudaMalloc(&b_c, nc*sizeof(float));
+  cudaMalloc(&t_c, nr*sizeof(float));
+  //------------ end of cuda mallocs -----------------
+
   // Read data in coordinate format and initialize sparse matrix
   int lastr=0;
 
@@ -72,7 +80,10 @@ main (int argc, char **argv)
 
   for (i=0; i<nc; i++) 
   {
-    b[i] = (float) rand()/1111111111;
+    float randomNumber = (float) rand()/1111111111;
+    //b[i] = (float) rand()/1111111111;
+    b[i] = randomNumber;
+    b_c[i] = randomNumber;
   }
 
   // MAIN COMPUTATION, SEQUENTIAL VERSION
@@ -87,13 +98,7 @@ main (int argc, char **argv)
   // TODO: Compute result on GPU and compare output
 
 //------------------------------------------------------------------------------------------
-    //------------ cuda mallocs ------------------------
-  cudaMalloc(&ptr_c, (nr+1)*sizeof(int));
-  cudaMalloc(&indices_c, n*sizeof(int));
-  cudaMalloc(&data_c, n*sizeof(float));
-  cudaMalloc(&b_c, nc*sizeof(float));
-  cudaMalloc(&t_c, nr*sizeof(float));
-  //------------ end of cuda mallocs -----------------
+    
 
   if ((fp_c = fopen(argv[1], "r")) == NULL) { abort();  }
 
@@ -123,11 +128,11 @@ main (int argc, char **argv)
     t_c[i] = 0.0;
   }
 
-  for (i=0; i<nc; i++) 
-  {
-    //b_c[i] = (float) rand()/1111111111;
-    b_c[i] = b[i];
-  }
+  // for (i=0; i<nc; i++) 
+  // {
+  //   //b_c[i] = (float) rand()/1111111111;
+  //   b_c[i] = b[i];
+  // }
 
   printf("segfault?\n");
     fflush(stdout);
