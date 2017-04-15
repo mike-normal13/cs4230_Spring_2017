@@ -88,7 +88,7 @@ main (int argc, char **argv)
     t[i] = 0.0;
   }
 
-  cudaMemcpy(t_c, t, nr*sizeof(float), cudaMemcpyHostToDevice);
+  //cudaMemcpy(t_c, t, nr*sizeof(float), cudaMemcpyHostToDevice);
 
   for (i=0; i<nc; i++) 
   {
