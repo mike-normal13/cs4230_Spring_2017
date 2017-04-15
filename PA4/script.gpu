@@ -9,6 +9,7 @@
 #SBATCH --mem=10G
 #SBATCH --time=00:1:00
 #SBATCH --export=ALL
-#SBATCH --qos=soc-gpu-kp     
+#SBATCH --qos=soc-gpu-kp  
+#SBATCH -o ./pa4.txt   
 ulimit -c unlimited -s
 ./sparse sm2.txt
