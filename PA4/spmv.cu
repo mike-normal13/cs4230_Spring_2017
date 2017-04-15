@@ -105,7 +105,7 @@ main (int argc, char **argv)
   // TODO: Compute result on GPU and compare output
   spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   cudaDeviceSynchronize();
-  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
+  checkCudaErrors(cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost));
   
 
 //   for(int k = 0; k < nr; k++)
