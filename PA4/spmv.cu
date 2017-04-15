@@ -4,6 +4,8 @@
 extern int cudaMemcpy();
 extern int cudaFree();
 
+__global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
+
 main (int argc, char **argv) 
 {
   FILE *fp;
@@ -110,4 +112,12 @@ printf("segfault before?\n");
   }
 
   // TODO: Compute result on GPU and compare output
+
+  spmv(nr, &ptr, &t, &data, &b, &indices);
 }
+
+__global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
+{
+
+}
+
