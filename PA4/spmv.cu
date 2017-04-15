@@ -125,7 +125,7 @@ __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c
   //for (i=0; i<nr; i++) 
   if(i < nr_c)
   {                                                      
-    for (int j = ptr[i]; j<ptr_c[i+1]; j++) 
+    for (int j = ptr_c[i]; j<ptr_c[i+1]; j++) 
     {
       t_c[i] = t_c[i] + data_c[j] * b_c[indices_c[j]];
       printf("%f ", t_c[i]);
