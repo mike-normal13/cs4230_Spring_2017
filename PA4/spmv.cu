@@ -17,7 +17,7 @@ main (int argc, char **argv)
 
 
 // ------------------- Variables for cuda solution -----------------
-  FILE* fp_c;
+  //FILE* fp_c;
   int* ptr_c;
   int* indices_c;
   float* data_c;
@@ -110,7 +110,4 @@ printf("segfault before?\n");
   }
 
   // TODO: Compute result on GPU and compare output
-
-//------------------------------------------------------------------------------------------
-    
-
+}
