@@ -83,11 +83,10 @@ printf("segfault before?\n");
 
   for (i=0; i<nc; i++) 
   {
-    float randomNumber = (float) rand()/1111111111;
-    //b[i] = (float) rand()/1111111111;
-    b[i] = randomNumber;
-    b_c[i] = randomNumber;
+    b[i] = (float) rand()/1111111111;
   }
+
+  cudaMemcpy(b_c, b, nc*sizeof(float), cudaMemcpyHostToDevice);
 
   printf("segfault after?\n");
     fflush(stdout);
