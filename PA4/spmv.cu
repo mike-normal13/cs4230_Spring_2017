@@ -25,6 +25,7 @@ main (int argc, char **argv)
   float* data_c;
   float* b_c;
   float* t_c;
+  float* res; // we plan on memcopying t_c to this after the call to spmv returns.
 // ------------------- end of Variables for cuda solution -----------------
 
   // Open input file and read to end of comments
@@ -53,6 +54,7 @@ main (int argc, char **argv)
   cudaMalloc(&data_c, n*sizeof(float));
   cudaMalloc(&b_c, nc*sizeof(float));
   cudaMalloc(&t_c, nr*sizeof(float));
+  cudaMalloc(&res, nr*sizeof(float));
   //------------ end of cuda mallocs -----------------
 
   // Read data in coordinate format and initialize sparse matrix
@@ -109,13 +111,15 @@ main (int argc, char **argv)
   printf("------------------------------------------------------------------------\n");
   printf("------------------------------------------------------------------------\n");
 
-printf("segfault before?\n");
-    fflush(stdout);
+//printf("segfault before?\n");
+    //fflush(stdout);
   // TODO: Compute result on GPU and compare output
   spmv<<<1, 1>>>(nr, ptr, t, data, b, indices);
 
-  printf("segfault after?\n");
-    fflush(stdout);
+  //printf("segfault after?\n");
+    //fflush(stdout);
+
+  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
 }
 
 __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
@@ -129,10 +133,10 @@ __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c
     {
       t_c[i] = t_c[i] + data_c[j] * b_c[indices_c[j]];
       printf("%f ", t_c[i]);
+      fflush(stdout);
     }
 
     printf("\n");
+    fflush(stdout);
   }
-
 }
-
