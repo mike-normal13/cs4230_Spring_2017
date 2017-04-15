@@ -17,6 +17,7 @@ main (int argc, char **argv)
 
 
 // ------------------- Variables for cuda solution -----------------
+  FILE* fp_c;
   int* ptr_c;
   int* indices_c;
   float* data_c;
@@ -44,15 +45,6 @@ main (int argc, char **argv)
   b = (float *) malloc(nc*sizeof(float));
   t = (float *) malloc(nr*sizeof(float));
 
-  //------------ cuda mallocs ------------------------
-  cudaMalloc(&ptr_c, (nr+1)*sizeof(int));
-  cudaMalloc(&indices_c, n*sizeof(int));
-  cudaMalloc(&data_c, n*sizeof(float));
-  cudaMalloc(&b_c, nc*sizeof(float));
-  cudaMalloc(&t_c, nr*sizeof(float));
-  //------------ end of cuda mallocs -----------------
-
-
   // Read data in coordinate format and initialize sparse matrix
   int lastr=0;
 
@@ -61,30 +53,16 @@ main (int argc, char **argv)
     int r;
     fscanf(fp,"%d %d %f\n", &r, &(indices[i]), &(data[i]));
 
-    indices_c[i] = indices[i];
-
-    printf("segfault?\n");
-    fflush(stdout);
-
-    data_c[i] = data[i];
-
-
     indices[i]--;  // start numbering at 0
-
-    indices_c[i]--;
     
     if (r!=lastr) 
     { 
       ptr[r-1] = i;
-      ptr_c[r - 1] = i;
-
       lastr = r; 
     }
   }
 
   ptr[nr] = n;
-
-  ptr_c[nr] = n;
 
   // initialize t to 0 and b with random data  
   for (i=0; i<nr; i++) 
@@ -107,4 +85,59 @@ main (int argc, char **argv)
   }
 
   // TODO: Compute result on GPU and compare output
+
+//------------------------------------------------------------------------------------------
+    //------------ cuda mallocs ------------------------
+  cudaMalloc(&ptr_c, (nr+1)*sizeof(int));
+  cudaMalloc(&indices_c, n*sizeof(int));
+  cudaMalloc(&data_c, n*sizeof(float));
+  cudaMalloc(&b_c, nc*sizeof(float));
+  cudaMalloc(&t_c, nr*sizeof(float));
+  //------------ end of cuda mallocs -----------------
+
+  if ((fp_c = fopen(argv[1], "r")) == NULL) { abort();  }
+
+  // Read data in coordinate format and initialize sparse matrix
+  int lastr_c = 0;
+
+  for (i=0; i<n; i++) 
+  {
+    int r_c;
+    fscanf(fp_c,"%d %d %f\n", &r, &(indices_c[i]), &(data_c[i]));
+
+    indices_c[i]--;  // start numbering at 0
+    
+    if (r_c!=lastr_c) 
+    { 
+      ptr_c[r_c-1] = i;
+
+      lastr_c = r_c; 
+    }
+  }
+
+  ptr_c[nr] = n;
+
+  // initialize t to 0 and b with random data  
+  for (i=0; i<nr; i++) 
+  {
+    t_c[i] = 0.0;
+  }
+
+  for (i=0; i<nc; i++) 
+  {
+    //b_c[i] = (float) rand()/1111111111;
+    b_c[i] = b[i];
+  }
+
+  printf("segfault?\n");
+    fflush(stdout);
+
+  // MAIN COMPUTATION, SEQUENTIAL VERSION
+  for (i=0; i<nr; i++) 
+  {                                                      
+    for (j = ptr_c[i]; j<ptr_c[i+1]; j++) 
+    {
+      t[i] = t[i] + data_c[j] * b_c[indices_c[j]];
+    }
+  }
 }
