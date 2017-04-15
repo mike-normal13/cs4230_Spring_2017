@@ -115,7 +115,7 @@ main (int argc, char **argv)
   fflush(stdout);
 
   // TODO: Compute result on GPU and compare output
-  spmv<<<1, nr>>>(nr, ptr, t, data, b, indices);
+  spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
   
 
@@ -132,8 +132,12 @@ main (int argc, char **argv)
   
 printf("segfault before?\n");
     fflush(stdout);
-  compare(t, res, nr, 0.001);
+  if(compare(t, res, nr, 0.001))
+  {
+    printf("sequential and parallel results match!\n");
+  }
     printf("segfault after?\n");
+  
  fflush(stdout);
 
  }
