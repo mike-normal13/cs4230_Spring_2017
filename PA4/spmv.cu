@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 extern int cudaMemcpy();
 extern int cudaFree();
@@ -101,10 +102,10 @@ main (int argc, char **argv)
     for (j = ptr[i]; j<ptr[i+1]; j++) 
     {
       t[i] = t[i] + data[j] * b[indices[j]];
-      printf("%f ", t[i]);
+      //printf("%f ", t[i]);
     }
 
-    printf("\n");
+    //printf("\n");
   }
 
   printf("------------------------------------------------------------------------\n");
@@ -120,6 +121,13 @@ main (int argc, char **argv)
     //fflush(stdout);
 
   cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
+
+  for(int k = 0; k < nr; k++)
+  {
+    printf("k: %d\n", k);
+    assert(t[k] == res[k]);
+  }
+
 }
 
 __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
