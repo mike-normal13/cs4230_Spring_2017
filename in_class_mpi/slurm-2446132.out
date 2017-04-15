@@ -1,0 +1,59 @@
+stack size              (kbytes, -s) unlimited
+mat_mat_mult.c: In function ‘main’:
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:38:8: note: in expansion of macro ‘N’
+  int c[N][N];
+        ^
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:39:8: note: in expansion of macro ‘N’
+  int A[N][N];
+        ^
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:40:8: note: in expansion of macro ‘N’
+  int B[N][N];
+        ^
+mat_mat_mult.c:43:2: error: ‘for’ loop initial declarations are only allowed in C99 mode
+  for(int i = 0; i < N; i++)
+  ^
+mat_mat_mult.c:43:2: note: use option -std=c99 or -std=gnu99 to compile your code
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:43:21: note: in expansion of macro ‘N’
+  for(int i = 0; i < N; i++)
+                     ^
+mat_mat_mult.c:45:3: error: ‘for’ loop initial declarations are only allowed in C99 mode
+   for(int j = 0; j < N; j++)
+   ^
+mat_mat_mult.c:45:18: error: ‘j’ undeclared (first use in this function)
+   for(int j = 0; j < N; j++)
+                  ^
+mat_mat_mult.c:45:18: note: each undeclared identifier is reported only once for each function it appears in
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:45:22: note: in expansion of macro ‘N’
+   for(int j = 0; j < N; j++)
+                      ^
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:57:17: note: in expansion of macro ‘N’
+  for(i = 0; i < N: i++)
+                 ^
+mat_mat_mult.c:6:11: error: expected expression before ‘=’ token
+ #define N = 4
+           ^
+mat_mat_mult.c:58:18: note: in expansion of macro ‘N’
+   for(j = 0; j < N; j++)
+                  ^
+[proxy:0:0@kp334] HYDU_create_process (../../utils/launch/launch.c:811): execvp error on file ./mat_mat_mult (No such file or directory)
+[mpiexec@kp334] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@kp334] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[proxy:0:1@kp335] HYDU_create_process (../../utils/launch/launch.c:811): execvp error on file ./mat_mat_mult (No such file or directory)

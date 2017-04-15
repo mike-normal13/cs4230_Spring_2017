@@ -10,6 +10,6 @@
 #SBATCH --time=00:1:00
 #SBATCH --export=ALL
 #SBATCH --qos=soc-gpu-kp  
-#SBATCH -o ./pa4.txt   
+#SBATCH --output=pa4.out
 ulimit -c unlimited -s
 ./sparse sm2.txt

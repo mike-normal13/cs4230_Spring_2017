@@ -52,6 +52,7 @@ main (int argc, char **argv)
   cudaMalloc(&t_c, nr*sizeof(float));
   //------------ end of cuda mallocs -----------------
 
+
   // Read data in coordinate format and initialize sparse matrix
   int lastr=0;
 
@@ -61,7 +62,12 @@ main (int argc, char **argv)
     fscanf(fp,"%d %d %f\n", &r, &(indices[i]), &(data[i]));
 
     indices_c[i] = indices[i];
+
+    printf("segfault?\n");
+    fflush(stdout);
+
     data_c[i] = data[i];
+
 
     indices[i]--;  // start numbering at 0
 

@@ -1,0 +1,2 @@
+stack size              (kbytes, -s) unlimited
+/uufs/kingspeak.peaks/sys/var/slurm/slurmd.spool/job2567556/slurm_script: line 15: 105971 Segmentation fault      (core dumped) ./sparse sm2.txt
