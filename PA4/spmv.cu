@@ -78,6 +78,9 @@ main (int argc, char **argv)
     t[i] = 0.0;
   }
 
+printf("segfault before?\n");
+    fflush(stdout);
+
   for (i=0; i<nc; i++) 
   {
     float randomNumber = (float) rand()/1111111111;
@@ -86,7 +89,7 @@ main (int argc, char **argv)
     b_c[i] = randomNumber;
   }
 
-  printf("segfault?\n");
+  printf("segfault after?\n");
     fflush(stdout);
 
   // MAIN COMPUTATION, SEQUENTIAL VERSION
