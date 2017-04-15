@@ -86,18 +86,12 @@ main (int argc, char **argv)
 
   cudaMemcpy(t_c, t, nr*sizeof(float), cudaMemcpyHostToDevice);
 
-printf("segfault before?\n");
-    fflush(stdout);
-
   for (i=0; i<nc; i++) 
   {
     b[i] = (float) rand()/1111111111;
   }
 
   cudaMemcpy(b_c, b, nc*sizeof(float), cudaMemcpyHostToDevice);
-
-  printf("segfault after?\n");
-    fflush(stdout);
 
   // MAIN COMPUTATION, SEQUENTIAL VERSION
   for (i=0; i<nr; i++) 
@@ -111,12 +105,34 @@ printf("segfault before?\n");
     printf("\n");
   }
 
+  printf("------------------------------------------------------------------------\n");
+  printf("------------------------------------------------------------------------\n");
+  printf("------------------------------------------------------------------------\n");
+
+printf("segfault before?\n");
+    fflush(stdout);
   // TODO: Compute result on GPU and compare output
   spmv<<<1, 1>>>(nr, ptr, t, data, b, indices);
+
+  printf("segfault after?\n");
+    fflush(stdout);
 }
 
 __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
 {
-  int f = 0;
+  int i = threadIdx.x
+
+  //for (i=0; i<nr; i++) 
+  if(i < nr_c)
+  {                                                      
+    for (int j = ptr[i]; j<ptr_c[i+1]; j++) 
+    {
+      t_c[i] = t_c[i] + data_c[j] * b_c[indices_c[j]];
+      printf("%f ", t_c[i]);
+    }
+
+    printf("\n");
+  }
+
 }
 
