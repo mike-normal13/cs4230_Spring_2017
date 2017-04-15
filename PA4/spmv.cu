@@ -103,7 +103,7 @@ main (int argc, char **argv)
   for (i=0; i<n; i++) 
   {
     int r_c;
-    fscanf(fp_c,"%d %d %f\n", &r, &(indices_c[i]), &(data_c[i]));
+    fscanf(fp_c,"%d %d %f\n", &r_c, &(indices_c[i]), &(data_c[i]));
 
     indices_c[i]--;  // start numbering at 0
     
