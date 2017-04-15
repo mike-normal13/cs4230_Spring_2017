@@ -118,22 +118,25 @@ main (int argc, char **argv)
   spmv<<<1, nr>>>(nr, ptr, t, data, b, indices);
   cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
   
+
+//   for(int k = 0; k < nr; k++)
+//   {
+//     printf("k: %d, ", k);
+//     fflush(stdout);
+//     printf("t[k]: %f, ", t[k]);
+//     fflush(stdout);
+//     printf("res[k]: %f\n", res[k]);
+//     fflush(stdout);
+//     //assert(t[k] == res[k]);
+//   }
+  
 printf("segfault before?\n");
     fflush(stdout);
-  for(int k = 0; k < nr; k++)
-  {
-    printf("k: %d, ", k);
-    fflush(stdout);
-    printf("t[k]: %f, ", t[k]);
-    fflush(stdout);
-    printf("res[k]: %f\n", res[k]);
-    fflush(stdout);
-    //assert(t[k] == res[k]);
-  }
-  printf("segfault after?\n");
-    fflush(stdout);
+  compare(t, res, nr, 0.001);
+    printf("segfault after?\n");
+ fflush(stdout);
 
-}
+ }
 
 __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
 {
