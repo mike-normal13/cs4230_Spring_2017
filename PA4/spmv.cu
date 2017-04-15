@@ -121,9 +121,13 @@ printf("segfault before?\n");
     fflush(stdout);
   for(int k = 0; k < nr; k++)
   {
-    printf("k: %d\n", k);
+    printf("k: %d, ", k);
     fflush(stdout);
-    assert(t[k] == t_c[k]);
+    printf("t[k]: %f, ", t[k]);
+    fflush(stdout);
+    printf("res[k]: %f\n", res[k]);
+    fflush(stdout);
+    assert(t[k] == res[k]);
   }
   printf("segfault after?\n");
     fflush(stdout);
