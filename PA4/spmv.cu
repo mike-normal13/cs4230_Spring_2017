@@ -86,6 +86,9 @@ main (int argc, char **argv)
     b_c[i] = randomNumber;
   }
 
+  printf("segfault?\n");
+    fflush(stdout);
+
   // MAIN COMPUTATION, SEQUENTIAL VERSION
   for (i=0; i<nr; i++) 
   {                                                      
@@ -134,8 +137,7 @@ main (int argc, char **argv)
   //   b_c[i] = b[i];
   // }
 
-  printf("segfault?\n");
-    fflush(stdout);
+  
 
   // MAIN COMPUTATION, SEQUENTIAL VERSION
   for (i=0; i<nr; i++) 
