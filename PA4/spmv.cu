@@ -112,11 +112,10 @@ printf("segfault before?\n");
   }
 
   // TODO: Compute result on GPU and compare output
-
-  spmv(nr, ptr, t, data, b, indices);
+  spmv<<<1, 1>>>(nr, ptr, t, data, b, indices);
 }
 
-extern __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
+__global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
 {
   int f = 0;
 }
