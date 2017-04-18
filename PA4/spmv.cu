@@ -6,7 +6,7 @@
 extern int cudaMemcpy();
 extern int cudaFree();
 
-extern __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
+extern __global__             void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
 
 __global__  void spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
 
