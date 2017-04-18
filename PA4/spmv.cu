@@ -9,7 +9,7 @@ extern int cudaFree();
 extern __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
 
 __global__  void
-spmv_csr_scalar_kernel(const int num_rows, const int * ptr, const int * indices, const float * data, const float* x, float * y)
+spmv_csr_scalar_kernel(const int num_rows, const int * ptr, const int * indices, const float * data, const float* x, float * y);
 int compare(float *a, float *b, int size, double threshold);
 
 main (int argc, char **argv) 
