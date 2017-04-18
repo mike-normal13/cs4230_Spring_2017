@@ -3,6 +3,18 @@
 #include <assert.h>
 //#include <helper_cuda.h>
 
+//  https://gist.github.com/jefflarkin/5390993
+//Macro for checking cuda errors following a cuda launch or api call
+#define cudaCheckError() 
+{                                          
+  cudaError_t e=cudaGetLastError();                                 
+  if(e!=cudaSuccess) 
+  {
+    printf("Cuda failure %s:%d: '%s'\n",__FILE__,__LINE__,cudaGetErrorString(e));           
+    exit(0); 
+ }                                                                 
+}
+
 extern int cudaMemcpy();
 extern int cudaFree();
 
@@ -109,7 +121,7 @@ main (int argc, char **argv)
   //spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   spmv_csr_scalar_kernel<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   //cudaDeviceSynchronize();
-  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
+  cudaCheckError(cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost));
     
   printf("segfault before?\n");
   fflush(stdout);
@@ -121,20 +133,6 @@ main (int argc, char **argv)
   printf("segfault after?\n");
   fflush(stdout);
  }
-
-__global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
-{
-  int i = threadIdx.x;
-
-  //for (i=0; i<nr; i++) 
-  if(i < nr_c)
-  {                                                      
-    for (int j = ptr_c[i]; j<ptr_c[i+1]; j++) 
-    {
-      t_c[i] = t_c[i] + data_c[j] * b_c[indices_c[j]];
-    }
-  }
-}
 
 __global__  void
 spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
@@ -164,4 +162,18 @@ int compare(float *a, float *b, int size, double threshold) {
       if (abs(a[i]-b[i]) > threshold) return 0;
     }
     return 1;
+}
+
+__global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
+{
+  int i = threadIdx.x;
+
+  //for (i=0; i<nr; i++) 
+  if(i < nr_c)
+  {                                                      
+    for (int j = ptr_c[i]; j<ptr_c[i+1]; j++) 
+    {
+      t_c[i] = t_c[i] + data_c[j] * b_c[indices_c[j]];
+    }
+  }
 }
