@@ -13,6 +13,18 @@
  }                                                                 \
 }
 
+#define CHECK(call) \ 
+{\ 
+  const cudaError_t error = call; \ 
+  if (error != cudaSuccess) \ 
+    {\ 
+      printf("Error: %s:%d, ", __FILE__, __LINE__); \ 
+      printf("code:%d, reason: %s\n", error, cudaGetErrorString(error)); \ 
+      exit(1); \ 
+    }\
+}
+
+
 extern int cudaMemcpy();
 extern int cudaFree();
 
@@ -119,7 +131,7 @@ main (int argc, char **argv)
   //spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   spmv_csr_scalar_kernel<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   //cudaDeviceSynchronize();
-  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
+  CHECK(cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost));
   cudaCheckError();
   fflush(stdout);
     
@@ -134,6 +146,7 @@ main (int argc, char **argv)
   fflush(stdout);
  }
 
+//  http://www.nvidia.com/docs/IO/66889/nvr-2008-004.pdf
 __global__  void
 spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
 {
@@ -154,7 +167,6 @@ spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b
     t_c[row] += dot;
   }
 }
-
 
 int compare(float *a, float *b, int size, double threshold) {
     int i;
