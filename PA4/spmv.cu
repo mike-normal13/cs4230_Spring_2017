@@ -9,19 +9,19 @@
  cudaError_t e=cudaGetLastError();                                 \
  if(e!=cudaSuccess) {                                              \
    printf("Cuda failure %s:%d: '%s'\n",__FILE__,__LINE__,cudaGetErrorString(e));           \
-   exit(0); \
+   exit(0);   \
  }                                                                 \
 }
 
-#define CHECK(call) \ 
-{\ 
-  const cudaError_t error = call; \ 
-  if (error != cudaSuccess) \ 
-    {\ 
-      printf("Error: %s:%d, ", __FILE__, __LINE__); \ 
-      printf("code:%d, reason: %s\n", error, cudaGetErrorString(error)); \ 
-      exit(1); \ 
-    }\
+#define CHECK(call)                   \ 
+{                                                       \ 
+  const cudaError_t error = call;                               \ 
+  if (error != cudaSuccess)                                                 \ 
+    {                                                                         \ 
+      printf("Error: %s:%d, ", __FILE__, __LINE__);                             \ 
+      printf("code:%d, reason: %s\n", error, cudaGetErrorString(error));        \ 
+      exit(1);                                                                  \ 
+    }                                                                           \
 }
 
 
