@@ -158,7 +158,7 @@ spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b
 int compare(float *a, float *b, int size, double threshold) {
     int i;
     for (i=0; i<size; i++) {
-      if (abs(a[i]-b[i]) > threshold) return 0;
+      if (abs(a[i] - b[i]) > threshold) return 0;
     }
     return 1;
 }
