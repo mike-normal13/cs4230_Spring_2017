@@ -121,7 +121,8 @@ main (int argc, char **argv)
   //spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   spmv_csr_scalar_kernel<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   //cudaDeviceSynchronize();
-  cudaCheckError(cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost));
+  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
+  cudaCheckError();
     
   printf("segfault before?\n");
   fflush(stdout);
