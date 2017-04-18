@@ -121,6 +121,7 @@ main (int argc, char **argv)
   //cudaDeviceSynchronize();
   cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
   cudaCheckError();
+  fflush(stdout);
     
   printf("segfault before?\n");
   fflush(stdout);
