@@ -8,8 +8,8 @@ extern int cudaFree();
 
 extern __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
 
-__global__  void
-spmv_csr_scalar_kernel(const int num_rows, const int * ptr, const int * indices, const float * data, const float* x, float * y);
+__global__  void spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
+
 int compare(float *a, float *b, int size, double threshold);
 
 main (int argc, char **argv) 
@@ -137,24 +137,23 @@ __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c
 }
 
 __global__  void
-spmv_csr_scalar_kernel(const int num_rows, const int * ptr, const int * indices, const float * data, const float* x, float * y)
+spmv_csr_scalar_kernel(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
 {
   int row = blockDim.x * blockIdx.x + threadIdx.x;
 
-  if(row < num_rows )
+  if(row < nr_c )
   {
     float dot = 0;
     
-    int row_start = ptr[row];
+    int row_start = ptr_c[row];
+    int row_end = ptr_c[row +1];
     
-    int row_end = ptr[row +1];
-    
-    for (int jj = row_start; jj < row_end; jj++)
+    for(int j = row_start; j < row_end; j++)
     {
-      dot += data[jj] * x[indices[jj]];
+      dot += data_c[j] * b_c[indices_c[j]];
     }
 
-    y[row] += dot;
+    t_c[row] += dot;
   }
 }
 
