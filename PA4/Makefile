@@ -4,6 +4,6 @@ SOURCE=spmv.cu
 EXECUTABLE=sparse
 
 $(EXECUTABLE): $(SOURCE)
-	nvcc $(INCLUDE) $< -o $@ -g -Wall
+	nvcc  -g -Wall $(INCLUDE) $< -o $@
 
 clean:
