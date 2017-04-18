@@ -7,6 +7,9 @@ extern int cudaMemcpy();
 extern int cudaFree();
 
 extern __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c);
+
+__global__  void
+spmv_csr_scalar_kernel(const int num_rows, const int * ptr, const int * indices, const float * data, const float* x, float * y)
 int compare(float *a, float *b, int size, double threshold);
 
 main (int argc, char **argv) 
@@ -106,7 +109,7 @@ main (int argc, char **argv)
   //spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   spmv_csr_scalar_kernel<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
   //cudaDeviceSynchronize();
-  checkCudaErrors(cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost));
+  cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost);
     
   printf("segfault before?\n");
   fflush(stdout);
