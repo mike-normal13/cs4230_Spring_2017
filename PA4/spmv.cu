@@ -20,7 +20,6 @@ main (int argc, char **argv)
   int nr; // number of rows in matrix
   int nc; // number of columns in matrix
 
-
 // ------------------- Variables for cuda solution -----------------
   //FILE* fp_c;
   int* ptr_c;
@@ -104,32 +103,20 @@ main (int argc, char **argv)
   }
 
   // TODO: Compute result on GPU and compare output
-  spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
-  cudaDeviceSynchronize();
+  //spmv<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
+  spmv_csr_scalar_kernel<<<1, nr>>>(nr, ptr_c, t_c, data_c, b_c, indices_c);
+  //cudaDeviceSynchronize();
   checkCudaErrors(cudaMemcpy(res, t_c, nr*sizeof(float), cudaMemcpyDeviceToHost));
+    
+  printf("segfault before?\n");
+  fflush(stdout);
   
-
-//   for(int k = 0; k < nr; k++)
-//   {
-//     printf("k: %d, ", k);
-//     fflush(stdout);
-//     printf("t[k]: %f, ", t[k]);
-//     fflush(stdout);
-//     printf("res[k]: %f\n", res[k]);
-//     fflush(stdout);
-//     //assert(t[k] == res[k]);
-//   }
-  
-printf("segfault before?\n");
-    fflush(stdout);
   if(compare(t, res, nr, 0.001))
   {
     printf("sequential and parallel results match!\n");
   }
-    printf("segfault after?\n");
-  
- fflush(stdout);
-
+  printf("segfault after?\n");
+  fflush(stdout);
  }
 
 __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c, int* indices_c)
@@ -145,6 +132,29 @@ __global__ void spmv(int nr_c, int* ptr_c, float* t_c, float* data_c, float* b_c
     }
   }
 }
+
+__global__  void
+spmv_csr_scalar_kernel(const int num_rows, const int * ptr, const int * indices, const float * data, const float* x, float * y)
+{
+  int row = blockDim.x * blockIdx.x + threadIdx.x;
+
+  if(row < num_rows )
+  {
+    float dot = 0;
+    
+    int row_start = ptr[row];
+    
+    int row_end = ptr[row +1];
+    
+    for (int jj = row_start; jj < row_end; jj++)
+    {
+      dot += data[jj] * x[indices[jj]];
+    }
+
+    y[row] += dot;
+  }
+}
+
 
 int compare(float *a, float *b, int size, double threshold) {
     int i;
