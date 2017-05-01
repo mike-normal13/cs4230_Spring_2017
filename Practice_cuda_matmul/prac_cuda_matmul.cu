@@ -69,6 +69,7 @@ int main(int argc, char** argv)
 		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
 	}
 
+	printf("segfault?\n");
 	for(i = 0; i < N; i++)
 	{
 		for(j = 0; j < N; j++)
