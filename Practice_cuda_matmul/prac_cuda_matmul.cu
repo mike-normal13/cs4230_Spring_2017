@@ -4,7 +4,8 @@
 //extern int cudaMemcpy();
 //extern int cudaFree();
 
-extern __global__ void cudaMatMul(int** C, int** A, int** B);
+extern __global__ 
+void cudaMatMul(int** C, int** A, int** B);
 
 int main(int argc, char** argv)
 {
@@ -49,26 +50,28 @@ int main(int argc, char** argv)
 		}
 	}
 
-	// mat mul
+	// COPY TO device memory
 	for(i = 0; i < N; i++)
 	{
-		for(j = 0; j < N; j++)
-		{
-			for(k = 0; k < N; k++)
-			{
-				C[i][j] += A[i][k] * B[k][j];
-			}
-		}
+		cudaMemcpy(A_c[i], A[i], N * sizeof(int), cudaMemcpyHostToDevice);
+		cudaMemcpy(B_c[i], B[i], N * sizeof(int), cudaMemcpyHostToDevice);
+		cudaMemcpy(C_c[i], C[i], N * sizeof(int), cudaMemcpyHostToDevice);
 	}
+
+	// mat mul
+	// for(i = 0; i < N; i++)
+	// 	for(j = 0; j < N; j++)
+	// 		for(k = 0; k < N; k++)
+	// 			C[i][j] += A[i][k] * B[k][j];
+	
 
 	for(i = 0; i < N; i++)
 	{
 		for(j = 0; j < N; j++)
-		{
 			printf("%d ", C[i][j]);
-		}
 		printf("\n");
 	}
+	
 
 	// free arrays
 	for(i = 0; i < N; i++)
@@ -80,3 +83,4 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
