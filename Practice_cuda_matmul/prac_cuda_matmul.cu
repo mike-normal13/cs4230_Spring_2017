@@ -21,8 +21,12 @@ int main(int argc, char** argv)
 	int* B_c[N];
 	int* C_c[N];
 
+	int i = 0;
+	int j = 0;
+	int k = 0;
+
 	// malloc individual arrays
-	for(int i = 0; i < N; i++)
+	for(i = 0; i < N; i++)
 	{
 		A[i] = (int*) malloc(N * sizeof(int));
 		B[i] = (int*) malloc(N * sizeof(int));
@@ -34,9 +38,9 @@ int main(int argc, char** argv)
 	}
 
 	// init data
-	for(int i = 0; i < N; i++)
+	for(i = 0; i < N; i++)
 	{
-		for(int j = 0; j < N; j++)
+		for(j = 0; j < N; j++)
 		{
 			A[i][j] = i + j;
 			B[i][j] = i * j;
@@ -46,20 +50,20 @@ int main(int argc, char** argv)
 	}
 
 	// mat mul
-	for(int i = 0; i < N; i++)
+	for(i = 0; i < N; i++)
 	{
-		for(int j = 0; j < N; j++)
+		for(j = 0; j < N; j++)
 		{
-			for(int k = 0; k < N; k++)
+			for(k = 0; k < N; k++)
 			{
 				C[i][j] += A[i][k] * B[k][j];
 			}
 		}
 	}
 
-	for(int i = 0; i < N; i++)
+	for(i = 0; i < N; i++)
 	{
-		for(int j = 0; j < N; j++)
+		for(j = 0; j < N; j++)
 		{
 			printf("%d ", C[i][j]);
 		}
@@ -67,7 +71,7 @@ int main(int argc, char** argv)
 	}
 
 	// free arrays
-	for(int i = 0; i < N; i++)
+	for(i = 0; i < N; i++)
 	{
 		free(A[i]);
 		free(B[i]);
