@@ -62,7 +62,7 @@ int main(int argc, char** argv)
 		cudaMemcpy(C_c[i], C[i], N * sizeof(int), cudaMemcpyHostToDevice);
 	}
 
-	cudaMatMul(C_c, A_c, B_c, n);	
+	cudaMatMul<<1, 1>>(C_c, A_c, B_c, n);	
 
 	for(i = 0; i < N; i++)
 	{
