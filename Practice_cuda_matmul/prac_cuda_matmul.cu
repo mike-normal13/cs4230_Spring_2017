@@ -22,9 +22,11 @@ int main(int argc, char** argv)
 	int* B_c[N];
 	int* C_c[N];
 
+	// cuda result placed in this value
+	int* ret[N];
+
 	int i = 0;
 	int j = 0;
-	int k = 0;
 
 	// malloc individual arrays
 	for(i = 0; i < N; i++)
@@ -36,6 +38,8 @@ int main(int argc, char** argv)
 		cudaMalloc((void**) &A_c[i], N * sizeof(int));
 		cudaMalloc((void**) &B_c[i], N * sizeof(int));
 		cudaMalloc((void**) &C_c[i], N * sizeof(int));
+
+		cudaMalloc((void**) &ret[i], N * sizeof(int));
 	}
 
 	// init data
@@ -58,17 +62,17 @@ int main(int argc, char** argv)
 		cudaMemcpy(C_c[i], C[i], N * sizeof(int), cudaMemcpyHostToDevice);
 	}
 
-	// mat mul
-	// for(i = 0; i < N; i++)
-	// 	for(j = 0; j < N; j++)
-	// 		for(k = 0; k < N; k++)
-	// 			C[i][j] += A[i][k] * B[k][j];
-	
+	cudaMatMul(C_c, A_c, B_c);	
+
+	for(i = 0; i < N; i++)
+	{
+		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
+	}
 
 	for(i = 0; i < N; i++)
 	{
 		for(j = 0; j < N; j++)
-			printf("%d ", C[i][j]);
+			printf("%d ", ret[i][j]);
 		printf("\n");
 	}
 	
@@ -79,8 +83,26 @@ int main(int argc, char** argv)
 		free(A[i]);
 		free(B[i]);
 		free(C[i]);
+
+		cudaFree(A_c);
+		cudaFree(B_c);
+		cudaFree(C_c);
+
+		cudaFree(ret);
 	}
 
 	return 0;
+}
+
+extern __global__ 
+void cudaMatMul(int** C, int** A, int** B)
+{
+	int i, j, k = 0;	
+
+	// mat mul
+	for(i = 0; i < N; i++)
+		for(j = 0; j < N; j++)
+			for(k = 0; k < N; k++)
+				C[i][j] += A[i][k] * B[k][j];
 }
 
