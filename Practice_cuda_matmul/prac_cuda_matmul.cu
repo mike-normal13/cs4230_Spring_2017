@@ -39,7 +39,9 @@ int main(int argc, char** argv)
 		cudaMalloc((void**) &B_c[i], N * sizeof(int));
 		cudaMalloc((void**) &C_c[i], N * sizeof(int));
 
-		cudaMalloc((void**) &ret[i], N * sizeof(int));
+		//cudaMalloc((void**) &ret[i], N * sizeof(int));
+
+		ret[i] = (int*) malloc(N * sizeof(int));
 	}
 
 	// init data
