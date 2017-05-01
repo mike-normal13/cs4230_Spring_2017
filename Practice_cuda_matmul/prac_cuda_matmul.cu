@@ -32,9 +32,9 @@ int main(int argc, char** argv)
 		B[i] = (int*) malloc(N * sizeof(int));
 		C[i] = (int*) malloc(N * sizeof(int));
 
-		cudaMalloc((int*) &A_c[i], N * sizeof(int));
-		cudaMalloc((int*) &B_c[i], N * sizeof(int));
-		cudaMalloc((int*) &C_c[i], N * sizeof(int));
+		cudaMalloc((int*) A_c[i], N * sizeof(int));
+		cudaMalloc((int*) B_c[i], N * sizeof(int));
+		cudaMalloc((int*) C_c[i], N * sizeof(int));
 	}
 
 	// init data
