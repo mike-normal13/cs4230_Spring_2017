@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-extern int cudaMemcpy();
-extern int cudaFree();
+//extern int cudaMemcpy();
+//extern int cudaFree();
 
 extern __global__ void cudaMatMul(int** C, int** A, int** B);
 
