@@ -61,9 +61,9 @@ int main(int argc, char** argv)
 	{
 		for(j = 0; j < N; j++)
 		{
-			cudaMemcpy(A_c[i][j], (void*)A[i][j], sizeof(int), cudaMemcpyHostToDevice);
-			cudaMemcpy(B_c[i][j], (void*)B[i][j], sizeof(int), cudaMemcpyHostToDevice);
-			cudaMemcpy(C_c[i][j], (void*)C[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy((void*)A_c[i][j], (void*)A[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy((void*)B_c[i][j], (void*)B[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy((void*)C_c[i][j], (void*)C[i][j], sizeof(int), cudaMemcpyHostToDevice);
 		}
 	}
 
