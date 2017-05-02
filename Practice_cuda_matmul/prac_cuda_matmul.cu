@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 	{
 		for(j = 0; j < N; j++)
 		{
-			cudaMemcpy(ret[i][j], C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
+			cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
 		}
 	}
 
