@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 	int* B[N];
 
 	// result
-	int* C[N][N];
+	int* C[N];
 
 	// cuda guys
 	int* A_c[N];
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 
 	//dim3 dimBlock(N, N);
 
-	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
+	cudaMatMul<<<1, 1>>>((int* [16])C_c, A_c, B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
