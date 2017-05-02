@@ -31,9 +31,9 @@ int main(int argc, char** argv)
 	// malloc individual arrays
 	for(i = 0; i < N; i++)
 	{
-		A[i] = (int*) malloc(N * sizeof(int));
-		B[i] = (int*) malloc(N * sizeof(int));
-		C[i] = (int*) malloc(N * sizeof(int));
+		A[i] = (void*) malloc(N * sizeof(int));
+		B[i] = (void*) malloc(N * sizeof(int));
+		C[i] = (void*) malloc(N * sizeof(int));
 
 		cudaMalloc((void**) &A_c[i], N * sizeof(int));
 		cudaMalloc((void**) &B_c[i], N * sizeof(int));
@@ -61,9 +61,9 @@ int main(int argc, char** argv)
 	{
 		for(j = 0; j < N; j++)
 		{
-			cudaMemcpy(A_c[i][j], A[i][j], sizeof(int*), cudaMemcpyHostToDevice);
-			cudaMemcpy(B_c[i][j], B[i][j], sizeof(int*), cudaMemcpyHostToDevice);
-			cudaMemcpy(C_c[i][j], C[i][j], sizeof(int*), cudaMemcpyHostToDevice);
+			cudaMemcpy(A_c[i][j], A[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(B_c[i][j], B[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(C_c[i][j], C[i][j], sizeof(int), cudaMemcpyHostToDevice);
 		}
 	}
 
