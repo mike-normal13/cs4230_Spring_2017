@@ -5,7 +5,7 @@
 //extern int cudaFree();
 
 extern __global__ 
-int** cudaMatMul(int** C, int** A, int** B, int n);
+void cudaMatMul(int*** C, int** A, int** B, int n);
 
 int main(int argc, char** argv)
 {
@@ -79,12 +79,12 @@ int main(int argc, char** argv)
 	cudaMemcpy2D(B_c, N * sizeof(int), B, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy2D(C_c, N * sizeof(int), C, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 
-	int** res = cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
+	cudaMatMul<<<1, 1>>>(&C_c, A_c, B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
 		//cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
-		cudaMemcpy(ret[i], res[i], N * sizeof(int), cudaMemcpyDeviceToHost);
+		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
 	}
 
 	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 }
 
 extern __global__ 
-int** cudaMatMul(int** C, int** A, int** B, int n)
+void cudaMatMul(int*** C, int** A, int** B, int n)
 {
 	int i = 0;	
 	int j = 0;
@@ -125,8 +125,6 @@ int** cudaMatMul(int** C, int** A, int** B, int n)
 	for(i = 0; i < n; i++)
 		for(j = 0; j < n; j++)
 			for(k = 0; k < n; k++)
-				C[i][j] += A[i][k] * B[k][j];
-
-	return C;
+				*C[i][j] += A[i][k] * B[k][j];
 }
 
