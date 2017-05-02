@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 }
 
 extern __global__ 
-void cudaMatMul(int** C, int** A, int** B, int n)
+void cudaMatMul(int* C, int* A, int* B, int n)
 {
 	int i = 0;	
 	int j = 0;
