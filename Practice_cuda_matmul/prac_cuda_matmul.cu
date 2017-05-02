@@ -57,25 +57,34 @@ int main(int argc, char** argv)
 	}
 
 	// COPY TO device memory
-	for(i = 0; i < N; i++)
-	{
-		for(j = 0; j < N; j++)
-		{
-			cudaMemcpy((void*)A_c[i][j], (void*)A[i][j], sizeof(int), cudaMemcpyHostToDevice);
-			cudaMemcpy((void*)B_c[i][j], (void*)B[i][j], sizeof(int), cudaMemcpyHostToDevice);
-			cudaMemcpy((void*)C_c[i][j], (void*)C[i][j], sizeof(int), cudaMemcpyHostToDevice);
-		}
-	}
+	// for(i = 0; i < N; i++)
+	// {
+	// 	for(j = 0; j < N; j++)
+	// 	{
+	// 		cudaMemcpy((void*)A_c[i][j], (void*)A[i][j], sizeof(int), cudaMemcpyHostToDevice);
+	// 		cudaMemcpy((void*)B_c[i][j], (void*)B[i][j], sizeof(int), cudaMemcpyHostToDevice);
+	// 		cudaMemcpy((void*)C_c[i][j], (void*)C[i][j], sizeof(int), cudaMemcpyHostToDevice);
+	// 	}
+	// }
+
+	//cudaMemcpy2D ( void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind )
+    //Copies data between host and device. 
+
+	cudaMemcpy2D(A_c, N * sizeof(int), A, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy2D(B_c, N * sizeof(int), B, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy2D(C_c, N * sizeof(int), C, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 
 	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
 
-	for(i = 0; i < N; i++)
-	{
-		for(j = 0; j < N; j++)
-		{
-			cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
-		}
-	}
+	// for(i = 0; i < N; i++)
+	// {
+	// 	for(j = 0; j < N; j++)
+	// 	{
+	// 		cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
+	// 	}
+	// }
+
+	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
 
 	printf("segfault before?\n");
 	for(i = 0; i < N; i++)
