@@ -29,15 +29,15 @@ int main(int argc, char** argv)
 	for(i = 0; i < N; i++)
 	{
 		//A[i] = (int*) malloc(N * sizeof(int));
-		A = (int*) malloc(N * N * sizeof(int));
-		B = (int*) malloc(N * N * sizeof(int));
-		C = (int*) malloc(N * N * sizeof(int));
+		A[i] = (int*) malloc(N * sizeof(int));
+		B[i] = (int*) malloc(N * sizeof(int));
+		C[i] = (int*) malloc(N * sizeof(int));
 
 		cudaMalloc((void**) &A_c[i], N * sizeof(int));
 		cudaMalloc((void**) &B_c[i], N * sizeof(int));
 		cudaMalloc((void**) &C_c[i], N * sizeof(int));
 
-		ret = (int*) malloc(N * N * sizeof(int));
+		ret[i] = (int*) malloc(N * sizeof(int));
 	}
 
 	// init data
