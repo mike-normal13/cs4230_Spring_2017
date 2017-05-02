@@ -56,9 +56,9 @@ int main(int argc, char** argv)
 
 			ret[i][j] = 0;
 
-			printf("%d ", B[i][j]);
+			//printf("%d ", B[i][j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 
 	// COPY TO device memory
