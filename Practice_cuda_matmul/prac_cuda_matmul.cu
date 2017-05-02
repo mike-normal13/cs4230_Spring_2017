@@ -59,16 +59,22 @@ int main(int argc, char** argv)
 	// COPY TO device memory
 	for(i = 0; i < N; i++)
 	{
-		cudaMemcpy(A_c[i], A[i], N * sizeof(int), cudaMemcpyHostToDevice);
-		cudaMemcpy(B_c[i], B[i], N * sizeof(int), cudaMemcpyHostToDevice);
-		cudaMemcpy(C_c[i], C[i], N * sizeof(int), cudaMemcpyHostToDevice);
+		for(j = 0; j < N; j++)
+		{
+			cudaMemcpy(A_c[i][j], A[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(B_c[i][j], B[i][j], sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(C_c[i][j], C[i][j], sizeof(int), cudaMemcpyHostToDevice);
+		}
 	}
 
 	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
-		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
+		for(j = 0; j < N; j++)
+		{
+			cudaMemcpy(ret[i][j], C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
+		}
 	}
 
 	printf("segfault before?\n");
@@ -78,7 +84,7 @@ int main(int argc, char** argv)
 			printf("%d ", ret[i][j]);
 		printf("\n");
 	}
-	printf("segfault before?\n");
+	printf("segfault after?\n");
 	
 
 	// free arrays
