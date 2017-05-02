@@ -1,26 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define N 16
+
 extern __global__ 
-void cudaMatMul(int** C, int** A, int** B, int n);
+void cudaMatMul(int C[N][N], int A[N][N], int B[N][N], int n);
 
 int main(int argc, char** argv)
 {
-	int N = 16;
-
-	int* A[N];
-	int* B[N];
+	int A[N][N];
+	int* B[N][N];
 
 	// result
-	int* C[N];
+	int* C[N][N];
 
 	// cuda guys
-	int* A_c[N];
-	int* B_c[N];
-	int* C_c[N];
+	int* A_c[N][N];
+	int* B_c[N][N];
+	int* C_c[N][N];
 
 	// cuda result placed in this value
-	int* ret[N];
+	int* ret[N][N];
 
 	int i = 0;
 	int j = 0;
@@ -64,9 +64,9 @@ int main(int argc, char** argv)
 	//cudaMemcpy2D ( void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind )
     //Copies data between host and device. 
 
-	dim3 dimBlock(N, N);
+	//dim3 dimBlock(N, N);
 
-	cudaMatMul<<<1, dim3>>>(C_c, A_c, B_c, N);	
+	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 }
 
 extern __global__ 
-void cudaMatMul(int** c, int** a, int** b, int n)
+void cudaMatMul(int c[N][N], int a[N][N], int b[N][N], int n)
 {
 	int i = 0;	
 	int j = 0;
