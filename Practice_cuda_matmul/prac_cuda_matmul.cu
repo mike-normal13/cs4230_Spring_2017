@@ -64,7 +64,9 @@ int main(int argc, char** argv)
 	//cudaMemcpy2D ( void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind )
     //Copies data between host and device. 
 
-	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
+	dim3 dimBlock(N, N);
+
+	cudaMatMul<<<1, dim3>>>(C_c, A_c, B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
