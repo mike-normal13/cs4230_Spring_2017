@@ -81,13 +81,11 @@ int main(int argc, char** argv)
 
 	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
 
-	// for(i = 0; i < N; i++)
-	// {
-	// 	for(j = 0; j < N; j++)
-	// 	{
-	// 		cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
-	// 	}
-	// }
+	for(i = 0; i < N; i++)
+	{
+		//cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
+		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
+	}
 
 	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
 
