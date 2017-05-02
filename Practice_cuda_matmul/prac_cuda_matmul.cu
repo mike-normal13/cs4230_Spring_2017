@@ -35,9 +35,9 @@ int main(int argc, char** argv)
 		B[i] = (int*) malloc(N * sizeof(int));
 		C[i] = (int*) malloc(N * sizeof(int));
 
-		cudaMalloc((void**) &A_c[i], N * sizeof(int));
-		cudaMalloc((void**) &B_c[i], N * sizeof(int));
-		cudaMalloc((void**) &C_c[i], N * sizeof(int));
+		cudaMalloc((int**) &A_c[i], N * sizeof(int));
+		cudaMalloc((int**) &B_c[i], N * sizeof(int));
+		cudaMalloc((int**) &C_c[i], N * sizeof(int));
 
 		//cudaMalloc((void**) &ret[i], N * sizeof(int));
 
