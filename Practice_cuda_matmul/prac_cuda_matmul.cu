@@ -8,19 +8,19 @@ void cudaMatMul(int C[N][N], int A[N][N], int B[N][N], int n);
 
 int main(int argc, char** argv)
 {
-	int A[N][N];
-	int B[N][N];
+	int* A[N];
+	int* B[N];
 
 	// result
-	int C[N][N];
+	int* C[N][N];
 
 	// cuda guys
-	int A_c[N][N];
-	int B_c[N][N];
-	int C_c[N][N];
+	int* A_c[N];
+	int* B_c[N];
+	int* C_c[N];
 
 	// cuda result placed in this value
-	int* ret[N][N];
+	int* ret[N];
 
 	int i = 0;
 	int j = 0;
