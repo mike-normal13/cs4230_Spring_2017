@@ -53,7 +53,10 @@ int main(int argc, char** argv)
 			B[i][j] = i * j;
 
 			C[i][j] = 0;
+
+			printf("%d ", A[i][j]);
 		}
+		printf("\n");
 	}
 
 	// COPY TO device memory
@@ -86,15 +89,13 @@ int main(int argc, char** argv)
 
 	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
 
-	printf("segfault before?\n");
-	for(i = 0; i < N; i++)
-	{
-		for(j = 0; j < N; j++)
-			printf("%d ", ret[i][j]);
-		printf("\n");
-	}
-	printf("segfault after?\n");
-	
+	// printf("segfault before?\n");
+	// for(i = 0; i < N; i++)
+	// {
+	// 	for(j = 0; j < N; j++)
+	// 		printf("%d ", ret[i][j]);
+	// 	printf("\n");
+	// }
 
 	// free arrays
 	for(i = 0; i < N; i++)
@@ -103,11 +104,11 @@ int main(int argc, char** argv)
 		free(B[i]);
 		free(C[i]);
 
-		cudaFree(A_c);
-		cudaFree(B_c);
-		cudaFree(C_c);
+		cudaFree(A_c[i]);
+		cudaFree(B_c[i]);
+		cudaFree(C_c[i]);
 
-		cudaFree(ret);
+		free(ret[i]);
 	}
 
 	return 0;
@@ -116,7 +117,9 @@ int main(int argc, char** argv)
 extern __global__ 
 void cudaMatMul(int** C, int** A, int** B, int n)
 {
-	int i, j, k = 0;	
+	int i = 0;	
+	int j = 0;
+	int k = 0;
 
 	// mat mul
 	for(i = 0; i < n; i++)
