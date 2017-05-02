@@ -5,7 +5,7 @@
 //extern int cudaFree();
 
 extern __global__ 
-void cudaMatMul(int** C, int** A, int** B, int n);
+void cudaMatMul(int* C, int* A, int* B, int n);
 
 int main(int argc, char** argv)
 {
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 	cudaMemcpy2D(B_c, N * sizeof(int), B, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy2D(C_c, N * sizeof(int), C, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 
-	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
+	cudaMatMul<<<1, 1>>>(&C_c, &A_c, &B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
