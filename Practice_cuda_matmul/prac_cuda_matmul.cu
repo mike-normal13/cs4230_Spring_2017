@@ -54,7 +54,9 @@ int main(int argc, char** argv)
 
 			C[i][j] = 0;
 
-			printf("%d ", A[i][j]);
+			ret[i][j] = 0;
+
+			printf("%d ", B[i][j]);
 		}
 		printf("\n");
 	}
