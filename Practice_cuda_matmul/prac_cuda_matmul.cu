@@ -69,10 +69,12 @@ int main(int argc, char** argv)
 
 	cudaMatMul<<<1, 1>>>((int (*) [16])C_c, (int (*) [16])A_c, (int (*) [16])B_c, N);	
 
-	for(i = 0; i < N; i++)
-	{
-		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
-	}
+	// for(i = 0; i < N; i++)
+	// {
+	// 	cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
+	// }
+
+	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
 
 	// printf("segfault before?\n");
 	for(i = 0; i < N; i++)
