@@ -9,15 +9,15 @@ void cudaMatMul(int C[N][N], int A[N][N], int B[N][N], int n);
 int main(int argc, char** argv)
 {
 	int A[N][N];
-	int* B[N][N];
+	int B[N][N];
 
 	// result
-	int* C[N][N];
+	int C[N][N];
 
 	// cuda guys
-	int* A_c[N][N];
-	int* B_c[N][N];
-	int* C_c[N][N];
+	int A_c[N][N];
+	int B_c[N][N];
+	int C_c[N][N];
 
 	// cuda result placed in this value
 	int* ret[N][N];
@@ -30,14 +30,14 @@ int main(int argc, char** argv)
 	{
 		//A[i] = (int*) malloc(N * sizeof(int));
 		A = (int*) malloc(N * N * sizeof(int));
-		B[i] = (int*) malloc(N * sizeof(int));
-		C[i] = (int*) malloc(N * sizeof(int));
+		B = (int*) malloc(N * N * sizeof(int));
+		C = (int*) malloc(N * N * sizeof(int));
 
 		cudaMalloc((void**) &A_c[i], N * sizeof(int));
 		cudaMalloc((void**) &B_c[i], N * sizeof(int));
 		cudaMalloc((void**) &C_c[i], N * sizeof(int));
 
-		ret[i] = (int*) malloc(N * sizeof(int));
+		ret = (int*) malloc(N * N * sizeof(int));
 	}
 
 	// init data
