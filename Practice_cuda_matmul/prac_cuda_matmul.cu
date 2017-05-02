@@ -92,12 +92,12 @@ int main(int argc, char** argv)
 	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
 
 	// printf("segfault before?\n");
-	// for(i = 0; i < N; i++)
-	// {
-	// 	for(j = 0; j < N; j++)
-	// 		printf("%d ", ret[i][j]);
-	// 	printf("\n");
-	// }
+	for(i = 0; i < N; i++)
+	{
+		for(j = 0; j < N; j++)
+			printf("%d ", ret[i][j]);
+		printf("\n");
+	}
 
 	// free arrays
 	for(i = 0; i < N; i++)
