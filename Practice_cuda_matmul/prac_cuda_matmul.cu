@@ -79,15 +79,12 @@ int main(int argc, char** argv)
 	cudaMemcpy2D(B_c, N * sizeof(int), B, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy2D(C_c, N * sizeof(int), C, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyHostToDevice);
 
-	cudaMatMul<<<1, 1>>>(&C_c, A_c, B_c, N);	
+	cudaMatMul<<<1, 1>>>(C_c, A_c, B_c, N);	
 
 	for(i = 0; i < N; i++)
 	{
-		//cudaMemcpy((void*)ret[i][j], (void*)C_c[i][j], sizeof(int), cudaMemcpyDeviceToHost);
 		cudaMemcpy(ret[i], C_c[i], N * sizeof(int), cudaMemcpyDeviceToHost);
 	}
-
-	cudaMemcpy2D(ret, N * sizeof(int), C_c, N * sizeof(int), N * sizeof(int), N * sizeof(int), cudaMemcpyDeviceToHost);
 
 	// printf("segfault before?\n");
 	for(i = 0; i < N; i++)
@@ -125,6 +122,6 @@ void cudaMatMul(int** C, int** A, int** B, int n)
 	for(i = 0; i < n; i++)
 		for(j = 0; j < n; j++)
 			for(k = 0; k < n; k++)
-				*C[i][j] += A[i][k] * B[k][j];
+				C[i][j] += A[i][k] * B[k][j];
 }
 
