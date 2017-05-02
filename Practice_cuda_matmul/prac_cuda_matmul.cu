@@ -31,13 +31,13 @@ int main(int argc, char** argv)
 	// malloc individual arrays
 	for(i = 0; i < N; i++)
 	{
-		A[i] = (void*) malloc(N * sizeof(int));
-		B[i] = (void*) malloc(N * sizeof(int));
-		C[i] = (void*) malloc(N * sizeof(int));
+		A[i] = (int*) malloc(N * sizeof(int));
+		B[i] = (int*) malloc(N * sizeof(int));
+		C[i] = (int*) malloc(N * sizeof(int));
 
-		cudaMalloc((void**) &A_c[i], N * sizeof(int));
-		cudaMalloc((void**) &B_c[i], N * sizeof(int));
-		cudaMalloc((void**) &C_c[i], N * sizeof(int));
+		cudaMalloc((void*) &A_c[i], N * sizeof(int));
+		cudaMalloc((void*) &B_c[i], N * sizeof(int));
+		cudaMalloc((void*) &C_c[i], N * sizeof(int));
 
 		//cudaMalloc((void**) &ret[i], N * sizeof(int));
 
